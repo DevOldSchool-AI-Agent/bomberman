@@ -193,7 +193,7 @@ export class RetroAudio {
     }
 
     try {
-      this.htmlProbeAudio = new Audio("/assets/final/sfx-place.wav");
+      this.htmlProbeAudio = new Audio(`${import.meta.env.BASE_URL}assets/final/sfx-place.wav`);
       this.htmlProbeAudio.volume = 1;
       this.htmlProbeResult = "pending";
 

@@ -41,40 +41,46 @@ export interface ThemeProbeResult {
 
 const FRAME_SIZE = 24;
 const EXTERNAL_AUDIO_ENABLED = true;
+const BASE_URL = import.meta.env.BASE_URL;
+
+function withBaseUrl(path: string): string {
+  const normalizedPath = path.startsWith("/") ? path.slice(1) : path;
+  return `${BASE_URL}${normalizedPath}`;
+}
 
 export const FINAL_THEME_MANIFEST: FinalThemeManifest = {
   spritesheets: [
     {
       key: "theme-tiles",
-      path: "/assets/final/tileset.png",
+      path: withBaseUrl("assets/final/tileset.png"),
       frameWidth: FRAME_SIZE,
       frameHeight: FRAME_SIZE,
       expectedFrames: 8
     },
     {
       key: "theme-player",
-      path: "/assets/final/players.png",
+      path: withBaseUrl("assets/final/players.png"),
       frameWidth: FRAME_SIZE,
       frameHeight: FRAME_SIZE,
       expectedFrames: 32
     },
     {
       key: "theme-bomb",
-      path: "/assets/final/bombs.png",
+      path: withBaseUrl("assets/final/bombs.png"),
       frameWidth: FRAME_SIZE,
       frameHeight: FRAME_SIZE,
       expectedFrames: 2
     },
     {
       key: "theme-flame",
-      path: "/assets/final/flames.png",
+      path: withBaseUrl("assets/final/flames.png"),
       frameWidth: FRAME_SIZE,
       frameHeight: FRAME_SIZE,
       expectedFrames: 2
     },
     {
       key: "theme-powerups",
-      path: "/assets/final/powerups.png",
+      path: withBaseUrl("assets/final/powerups.png"),
       frameWidth: FRAME_SIZE,
       frameHeight: FRAME_SIZE,
       expectedFrames: 8
@@ -84,37 +90,37 @@ export const FINAL_THEME_MANIFEST: FinalThemeManifest = {
     {
       key: "bgm_battle",
       paths: [
-        "/assets/final/bgm-battle.ogg",
-        "/assets/final/bgm-battle.mp3",
-        "/assets/final/bgm-battle.m4a",
-        "/assets/final/bgm-battle.wav"
+        withBaseUrl("assets/final/bgm-battle.ogg"),
+        withBaseUrl("assets/final/bgm-battle.mp3"),
+        withBaseUrl("assets/final/bgm-battle.m4a"),
+        withBaseUrl("assets/final/bgm-battle.wav")
       ]
     },
     {
       key: "sfx_place",
       paths: [
-        "/assets/final/sfx-place.ogg",
-        "/assets/final/sfx-place.mp3",
-        "/assets/final/sfx-place.m4a",
-        "/assets/final/sfx-place.wav"
+        withBaseUrl("assets/final/sfx-place.ogg"),
+        withBaseUrl("assets/final/sfx-place.mp3"),
+        withBaseUrl("assets/final/sfx-place.m4a"),
+        withBaseUrl("assets/final/sfx-place.wav")
       ]
     },
     {
       key: "sfx_blast",
       paths: [
-        "/assets/final/sfx-blast.ogg",
-        "/assets/final/sfx-blast.mp3",
-        "/assets/final/sfx-blast.m4a",
-        "/assets/final/sfx-blast.wav"
+        withBaseUrl("assets/final/sfx-blast.ogg"),
+        withBaseUrl("assets/final/sfx-blast.mp3"),
+        withBaseUrl("assets/final/sfx-blast.m4a"),
+        withBaseUrl("assets/final/sfx-blast.wav")
       ]
     },
     {
       key: "sfx_pickup",
       paths: [
-        "/assets/final/sfx-pickup.ogg",
-        "/assets/final/sfx-pickup.mp3",
-        "/assets/final/sfx-pickup.m4a",
-        "/assets/final/sfx-pickup.wav"
+        withBaseUrl("assets/final/sfx-pickup.ogg"),
+        withBaseUrl("assets/final/sfx-pickup.mp3"),
+        withBaseUrl("assets/final/sfx-pickup.m4a"),
+        withBaseUrl("assets/final/sfx-pickup.wav")
       ]
     }
   ]
