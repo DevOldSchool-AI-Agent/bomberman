@@ -91,8 +91,6 @@ export const FINAL_THEME_MANIFEST: FinalThemeManifest = {
       key: "bgm_battle",
       paths: [
         withBaseUrl("assets/final/bgm-battle.ogg"),
-        withBaseUrl("assets/final/bgm-battle.mp3"),
-        withBaseUrl("assets/final/bgm-battle.m4a"),
         withBaseUrl("assets/final/bgm-battle.wav")
       ]
     },
@@ -100,8 +98,6 @@ export const FINAL_THEME_MANIFEST: FinalThemeManifest = {
       key: "sfx_place",
       paths: [
         withBaseUrl("assets/final/sfx-place.ogg"),
-        withBaseUrl("assets/final/sfx-place.mp3"),
-        withBaseUrl("assets/final/sfx-place.m4a"),
         withBaseUrl("assets/final/sfx-place.wav")
       ]
     },
@@ -109,8 +105,6 @@ export const FINAL_THEME_MANIFEST: FinalThemeManifest = {
       key: "sfx_blast",
       paths: [
         withBaseUrl("assets/final/sfx-blast.ogg"),
-        withBaseUrl("assets/final/sfx-blast.mp3"),
-        withBaseUrl("assets/final/sfx-blast.m4a"),
         withBaseUrl("assets/final/sfx-blast.wav")
       ]
     },
@@ -118,8 +112,6 @@ export const FINAL_THEME_MANIFEST: FinalThemeManifest = {
       key: "sfx_pickup",
       paths: [
         withBaseUrl("assets/final/sfx-pickup.ogg"),
-        withBaseUrl("assets/final/sfx-pickup.mp3"),
-        withBaseUrl("assets/final/sfx-pickup.m4a"),
         withBaseUrl("assets/final/sfx-pickup.wav")
       ]
     }

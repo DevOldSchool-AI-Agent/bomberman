@@ -15,19 +15,19 @@ const SPRITESHEETS = [
 const AUDIO_GROUPS = [
   {
     key: "bgm_battle",
-    candidates: ["bgm-battle.ogg", "bgm-battle.mp3", "bgm-battle.m4a", "bgm-battle.wav"]
+    candidates: ["bgm-battle.ogg", "bgm-battle.wav"]
   },
   {
     key: "sfx_place",
-    candidates: ["sfx-place.ogg", "sfx-place.mp3", "sfx-place.m4a", "sfx-place.wav"]
+    candidates: ["sfx-place.ogg", "sfx-place.wav"]
   },
   {
     key: "sfx_blast",
-    candidates: ["sfx-blast.ogg", "sfx-blast.mp3", "sfx-blast.m4a", "sfx-blast.wav"]
+    candidates: ["sfx-blast.ogg", "sfx-blast.wav"]
   },
   {
     key: "sfx_pickup",
-    candidates: ["sfx-pickup.ogg", "sfx-pickup.mp3", "sfx-pickup.m4a", "sfx-pickup.wav"]
+    candidates: ["sfx-pickup.ogg", "sfx-pickup.wav"]
   }
 ];
 
