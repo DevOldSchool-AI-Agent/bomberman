@@ -1,0 +1,273 @@
+Original prompt: PLEASE IMPLEMENT THIS PLAN: SNES-Style Bomberman (Local Multiplayer) — 8-12 Week Beta Plan
+
+- Initialized TypeScript + Phaser + Vite + Vitest + ESLint project scaffold.
+- Added deterministic simulation modules (state types, config, RNG, map tiles, match creation, simulation stepping).
+- Added six map definitions and spawn-safe map preprocessing.
+- Added Phaser scene flow: boot -> title -> lobby -> map select -> battle -> results.
+- Added local input support for keyboard plus per-slot gamepad polling.
+- Added runtime hooks: window.render_game_to_text and window.advanceTime(ms).
+- Added asset manifest validation with non-blocking fallback behavior.
+- Validation run: `npm run check` completed successfully (eslint + vitest + tsc + vite build).
+- Test coverage currently includes explosion propagation, chain reactions, pickup application, sudden death progression, win condition resolution, and deterministic replay hash stability.
+- Improved in-match readability: each powerup now has unique iconography, pulse highlight, and a right-side legend with live counts.
+- Expanded HUD with per-player bomb/range/speed/ability status to make pickups and effects immediately visible.
+- Updated ESLint config to ignore generated artifacts (`dist/`, `coverage/`, `node_modules/`).
+- Fixed kicked-bomb explosion bug: explosion origin and chain checks now use rounded grid cells, so blast range/soft-block destruction works while bombs are sliding.
+- Fixed kick behavior: bombs are kicked only when moving into adjacent bombs (not while standing on newly placed bombs), preventing opposite-direction/auto-kick behavior.
+- Added regressions tests for sliding-bomb blast propagation and kick direction/self-kick behavior.
+- Fixed missing results transition: battle scene no longer exits update early when match is finished, allowing result delay countdown and win screen navigation.
+- Implemented runtime-generated retro sprite atlas and migrated battle visuals to sprite-based rendering for tiles, players, bombs, flames, and powerups.
+- Added event-driven retro SFX synthesis for bomb placement/explosions, pickups, eliminations, and match finish.
+- Fixed intermittent bomb placement lockout caused by sudden-death bomb removal not decrementing owner `activeBombs`.
+- Added regression test to verify bomb capacity is released when sudden death destroys an active bomb.
+- Added boot-time external theme loader for spritesheets and audio with registry-driven availability flags.
+- Battle scene now switches between external asset theme and generated fallback theme at runtime.
+- Audio now uses external SFX/BGM when available and synth fallback otherwise.
+- Documented expected external asset frame layout in README.
+- Weighted powerup drop pool toward `extraBomb` so Bomb Up appears more often in matches.
+- Added regression test proving Bomb Up stacks and enables concurrent placement of additional bombs.
+- Improved in-match readability: animated fallback player sprites, board framing/atmosphere pass, and floating pickup callouts (e.g. "BOMB +1").
+- Implemented requested SNES Bomberman 3 pickup set: Bomb Up, Fire Up, Full Fire, Speed Up, Bomb Kick, Power Glove, Bomb Pass, Block Pass, Power Bomb, Skull.
+- Added gameplay systems: glove pick/throw bomb interaction, power-bomb piercing soft-block explosions, skull curse states (reverse/slow/no-bomb) with timed decay.
+- Updated visuals and legends for new pickups and added additional retro sprite frames/icons for Full Fire, Glove, Power Bomb, and Skull.
+- Added regression tests for full-fire/power-bomb behavior, glove pickup+throw flow, and skull curse application.
+- Added a new visual-effects layer: entity shadows, bomb fuse urgency rings, flame glow bloom, and subtle board scanlines for stronger depth/readability.
+- Added event-driven pixel particles for pickups, bomb explosions, block destruction, and eliminations.
+- Improved readability of special entities: skull pickup tint, pulsing powerups, power-bomb tint/size emphasis, and animated flame alpha.
+- Upgraded fallback character art with directional animation frames (up/down/left/right + walk phases) and directional frame selection in battle rendering.
+- Upgraded fallback tilemap art with multi-variant frames per tile type (empty/hard/soft/sudden death) and deterministic per-cell variation for richer board visuals.
+- Removed Bomb Pass and Block Pass from gameplay and presentation: powerup types, drop pool, movement logic, HUD labels, pickup toasts, and sprite atlas entries.
+- Updated external powerup spritesheet contract to 8 frames in README (`extraBomb`, `flameUp`, `fullFire`, `speedUp`, `kick`, `glove`, `powerBomb`, `skull`).
+- Reworked fallback visual palette to be more vibrant (board background lighting, brighter tile colors, higher-contrast bomb/flame sprites).
+- Redrew fallback player sprites with clearer SNES-style silhouettes, stronger shading, and directional limb/facing cues to improve readability in motion.
+- Validation run: `npm run check` completed successfully after the changes.
+- Refined fallback player sprites again using the provided Bomberman 3 sheet as style inspiration (helmet shape, visor band, gloves/boots, directional face cues, walk pose silhouette).
+- Validation run: `npm run check` completed successfully after the inspiration-based player art update.
+- Fixed bomb chain reactions so bombs triggered by flames detonate in the same simulation tick instead of being removed early.
+- Added regression coverage for same-tick chain detonations with event assertions (`bomb_exploded` emitted for both bombs).
+- Increased player render scale from `0.78` to `0.92` of tile size and widened player shadow ellipses to match larger silhouettes.
+- Validation run: `npm run check` completed successfully after chain/player-size changes.
+- Removed in-match HUD/legend overlay rendering by default so the battle view is free of debug text.
+- Improved menu presentation across Title, Lobby, Map Select, and Results with layered backgrounds, framed panels, stronger typography hierarchy, and animated prompt/winner emphasis.
+- Added map-select ASCII preview rendering for faster map readability before match start.
+- Replaced bot AI with deterministic hazard-aware behavior: safety pathing away from blasts, pickup/pressure navigation, and bomb placement gated by escape-route checks.
+- Added dedicated bot tests for hazard escape, offensive bomb placement, and trapped no-escape bomb suppression.
+- Validation run: `npm run check` completed successfully after UI and bot updates.
+- Improved bot roaming/chase behavior so bots continue moving when enemies are far away: slower direction-order jitter, long-range chase target, and deterministic waypoint patrol fallback.
+- Added regression test ensuring a bot produces non-zero movement intent even when the nearest opponent is distant.
+- Validation run: `npm run check` completed successfully after far-distance AI movement fix.
+- Removed all menu border/outline strokes (title, lobby, map select, results) and replaced them with borderless layered panels plus animated glow orbs.
+- Continued graphics polish on menus with deeper atmospheric lighting and subtle motion to keep screens lively without framed UI boxes.
+- Upgraded synth fallback SFX: pitch sweeps, filtered noise bursts, event-specific pickup voicing, sudden-death cues, soft-block break cues, and richer power-bomb explosion layering.
+- Added slight pitch/rate variance to repeated SFX playback to reduce ear fatigue/repetition.
+- Included `isPowerBomb` in explosion event payload to drive differentiated audio response for power bombs.
+- Validation run: `npm run check` completed successfully after menu-border removal and A/V improvements.
+- Improved CPU survival behavior with stronger self-preservation rules: chain-aware bomb hazard timing, earlier escape thresholds, and explicit self-blast-lane evacuation.
+- Tightened bot bombing discipline: CPUs no longer stack new bombs while one is already active and use lower-frequency soft-block farming.
+- Added bot regression coverage for active-bomb suppression and chain-reaction hazard response.
+- Validation run: `npm run check` completed successfully after AI survivability updates.
+- Added a persistent master-volume session setting with lower default (`30%`) and global Phaser sound initialization from session state at startup.
+- Added Map Select volume controls with visible menu option (`Volume XX%`), segmented meter UI, and keyboard bindings (`A/D` or `</>`) with 5% clamped steps.
+- Wired menu volume changes directly into Phaser sound manager so loudness updates immediately before starting a match.
+- Wired battle audio to respect session master volume: external SFX, battle music, and synth fallback gains are all scaled by the same master-volume value.
+- Continued graphics polish in this pass: upgraded Map Select color palette/ambient spark animation and refreshed battle background lighting/panel treatment for more vibrant contrast.
+- Validation run: `npm run check` completed successfully after volume and graphics changes.
+- Corrected external audio scaling to avoid double-attenuation: Phaser sample/music volumes now rely on global sound volume once, while synth fallback remains explicitly master-volume-scaled.
+- Validation run: `npm run check` re-run completed successfully after external-audio scaling fix.
+- Diagnosed external-theme load errors: all files under `public/assets/final` are currently zero-byte placeholders, which caused Phaser decode/process failures (`bgm_battle`, `theme-tiles`, etc.).
+- Added external-asset preflight validation before queueing loads: PNG and OGG signature checks plus OGG capability check (`canPlayType`) so unsupported/invalid assets are skipped cleanly.
+- Refactored BootScene startup flow to asynchronously probe external assets, queue only validated files, then continue boot; fallback retro visuals/audio now activate without Phaser loader errors when final assets are invalid or empty.
+- Validation run: `npm run check` completed successfully after loader robustness changes.
+- Added multi-format external audio fallback support in manifest/probe flow (`ogg`, `mp3`, `m4a`) with browser codec capability checks and signature validation before queueing loads.
+- Extended startup asset probing to validate spritesheet PNG signatures + dimensions + expected frame counts, and log per-asset rejection reasons before boot continues.
+- Boot scene now consumes probe results (`manifest + issues`), queues only validated assets, and continues with fallback theme without loader decode/process errors.
+- Added strict asset validator script `scripts/validate-final-assets.mjs` for CI/release use: checks non-empty files, signatures, spritesheet frame compatibility/counts, and audio source presence per key.
+- Added npm scripts: `validate:assets` and `check:release`.
+- Updated README with audio fallback format contract and validation commands.
+- Validation run: `npm run check` completed successfully.
+- Validation run: `npm run validate:assets` currently fails as expected because all `public/assets/final` files are still empty placeholders.
+- Fixed viewport stretching by switching Phaser scale config to `Scale.FIT` + centered auto-layout (`CENTER_BOTH`) while keeping the game's native resolution.
+- Removed CSS overrides that forced canvas to `100%` width/height and replaced with centered display styling so aspect ratio stays locked with letterboxing.
+- Validation run: `npm run check` completed successfully after aspect-ratio fix.
+- Improved viewport centering robustness: switched Phaser scale aut centering to `NO_CENTER` and now center canvas via fixed full-viewport flex container (`#app`), preventing off-center positioning seen in some window/layout contexts.
+- Validation run: `npm run check` completed successfully after centering fix.
+- Added WAV as an additional external audio fallback format (runtime probe + manifest + validator) with signature checks and browser capability detection.
+- Added baseline external asset generator script (`npm run generate:assets`) that creates valid PNG spritesheets and WAV audio for all required theme keys.
+- Replaced zero-byte external placeholders by generating valid assets in `public/assets/final`.
+- Completed release verification flow: `npm run check:release` now passes end-to-end (lint, tests, build, strict asset validation).
+- Improved in-match readability graphics pass: larger bomb/flame rendering, stronger flame alpha, larger pickup icons, and per-powerup glow halos for higher contrast and faster pickup recognition.
+- Validation run: `npm run check:release` completed successfully after graphics and asset pipeline updates.
+- Improved generated external art assets: generator now outputs RGBA spritesheets with transparent backgrounds for player/bomb/flame/powerups (removing black matte artifacts) plus additional shading details.
+- Updated PNG encoder in asset generator to write RGBA (`color type 6`) so transparency is preserved correctly.
+- Improved text clarity by avoiding fractional upscale blur: switched runtime canvas layout to crisp integer scaling when possible (with centered viewport), and raised menu text object resolution via `setResolution(2)` across title/lobby/map-select/results.
+- Regenerated external assets after transparency/art updates (`npm run generate:assets`).
+- Validation run: `npm run check:release` completed successfully after transparency/text-clarity updates.
+- Attempted browser-client visual automation; repo-local/non-Playwright browser client script was not present in this environment (`missing web_game_browser_client`).
+- Disabled battle music playback for now by default: added session `musicEnabled` flag (default `false`) and gated `RetroAudio` battle-music startup on that flag while keeping SFX active.
+- Advanced external graphics pipeline to next step: generator now outputs 8-frame player spritesheet (directional idle/walk) and 8-frame tileset (base + variant per tile class).
+- Updated battle renderer to use external animated player frames when 8+ frames are available and use external tile variants when 8+ tile frames are present.
+- Tightened external-asset quality gates for release: `theme-tiles` and `theme-player` now require at least 8 frames in runtime probe and validator.
+- Regenerated external assets with transparent RGBA sprites and new frame layouts (`npm run generate:assets`).
+- Validation run: `npm run check:release` completed successfully after music disable + next-step graphics upgrades.
+- Reverted audio direction: external theme audio loading is now disabled at runtime, so gameplay uses the legacy synthesized SFX path and no external music/samples are decoded.
+- Simplified synth event voicing back toward a classic/cleaner profile (fewer layered sweeps/noise, lower gains, softer pickup/finish cues).
+- Validation run: `npm run check` and `npm run check:release` completed successfully after audio revert.
+- Advanced graphics to the next step with a new generated art pass: richer tile shading/patterning for all 8 tile frames plus clearer, higher-contrast player silhouettes with improved directional readability.
+- Improved pickup icon readability by strengthening badge framing/highlights in generated powerup art.
+- Increased in-match entity readability further by raising player render size to `1.02x` tile and powerup display scale to `0.80x` tile pulse.
+- Regenerated external assets (`npm run generate:assets`) and re-validated release checks (`npm run check:release`), all passing.
+- Replaced tint-based player coloring with true per-player palette sprites:
+  - External `players.png` now uses 4 palette blocks x 8 directional frames (32 total) with deterministic palette selection per player slot.
+  - Fallback retro atlas now also includes palette-specific player frames (`player-p{palette}-{dir}-{phase}`), so color identity remains without runtime tinting.
+- Updated battle rendering to select player frame by palette index (slot/color mapping) and removed player `setTint` usage.
+- Tightened visual asset contracts: `theme-player` now requires at least 32 frames in both runtime manifest probe and strict release validator.
+- Added a dedicated `SettingsScene` (master volume + music toggle) and wired menu access (`S`) from title, lobby, map select, and results.
+- Cleaned menu flow:
+  - Title now has explicit Start/Settings selection.
+  - Map Select no longer includes inline volume controls/meter (moved to settings), with simpler map/timer focused layout.
+  - Results can open settings and still resolve winner from latest match state if no explicit `winnerId` payload is provided.
+- Updated README controls and external asset frame docs for settings flow and 32-frame player sheets.
+- Regenerated external assets (`npm run generate:assets`) and re-validated full release checks (`npm run check:release`), all passing.
+- Updated bomb placement rule: a player can no longer place a bomb on a tile currently occupied by another alive player.
+- Added regression test coverage for blocked placement on occupied player tile.
+- Updated bomb rendering alignment: bomb sprites, fuse rings, and bomb shadow ellipses now snap to rounded tile centers for consistent visual centering.
+- Addressed powerup icon border styling: replaced dark/black badge framing with brighter blue framing in both generated external assets and fallback retro atlas.
+- Regenerated external assets and re-ran full release checks (`npm run check:release`), all passing.
+- Added soft-block destruction crumble animation in presentation layer (3-stage fade/scale collapse effect) triggered from `soft_block_destroyed` events.
+- Added sprite-level readability pass: player sprites now have subtle outline/drop-shadow sprites, and powerups now render with matching outline/drop-shadow sprites.
+- Added persistent settings storage via `localStorage` (`neo-bomber-settings-v1`) for `masterVolume` and `musicEnabled`.
+- Session initialization now loads persisted settings; settings changes in `SettingsScene` now save immediately and on exit.
+- Validation run: `npm run check:release` completed successfully after crumble/outline/persistence updates.
+- Adjusted soft-block crumble timing to be visible: crumble now delays until the flame window has mostly passed (derived from `flameTicks`) instead of starting under active explosion flames.
+- Validation run: `npm run check` completed successfully after crumble timing adjustment.
+- Removed soft-block crumble presentation effect entirely based on feedback; soft-block destruction now only uses existing explosion/pixel burst feedback.
+- Validation run: `npm run check` completed successfully after crumble removal.
+- Implemented match micro-cinematics in battle: `READY`/`GO` intro banner with brief start-of-round input lock (simulation tick delay), plus winner banner before results transition.
+- Added CPU difficulty setting (`easy`/`normal`/`hard`) to session + lobby controls (`A/D`) and wired bot intent behavior profiles (pathing depth, hazard thresholds, pressure range, soft-block farming cadence, idle cadence).
+- Extended simulation config with `botDifficulty` and routed it through `stepMatch` into bot decision logic.
+- Added deterministic replay export/import support:
+  - runtime hooks: `window.export_replay_json()` and `window.import_replay_json(payload)`.
+  - battle runtime bridge now records per-tick `InputFrame` capture plus seed/map/timer/lobby metadata, exports JSON, and can import/restart replay runs.
+  - queued import fallback when battle scene bridge is not currently active.
+- Implemented elimination loot redistribution: when a player dies, their upgrades/abilities are converted into pickups and scattered across valid empty map cells (deterministic RNG, unique cells, avoids death tile and occupied cells).
+- Added regression tests:
+  - bot difficulty pressure behavior (`hard` bombs at longer-range pressure opportunity where `normal` does not).
+  - player-elimination drop scattering behavior and uniqueness.
+- Updated README controls/runtime hook docs for lobby difficulty controls and replay export/import hooks.
+- Validation run: `npm run check:release` completed successfully after all updates.
+- Hardened rematch flow reset by centralizing battle per-round transient state defaults in `src/ui/scenes/battleTransientState.ts` and using it from `BattleScene.create()` to avoid stale delay/pause/replay cursors between matches.
+- Added rematch regression tests in `tests/battleTransientState.test.ts` to assert clean state defaults and isolated replay-frame buffers per round.
+- Added deterministic soak test `tests/rematchSoak.test.ts` that runs 60 bot-only rematches across rotating maps and asserts deterministic identical outcomes across two full passes.
+- Added npm script `npm run test:soak` and updated default `npm run test` to exclude soak from fast CI/local runs.
+- Updated README scripts list with the new soak command.
+- Validation run: `npm run test` passed (26 tests), `npm run test:soak` passed (1 soak test, ~3.1s), and `npm run check` passed (lint + tests + build).
+- Added release-check soak gating script `scripts/run-soak-if-enabled.mjs` so `check:release` runs soak only when `SOAK_TESTS=1` (supports `1/true/yes/on`).
+- Updated `check:release` script to execute soak gate after lint/test/build and asset validation.
+- Updated README script docs with `SOAK_TESTS=1` usage for release checks.
+- Validation run: `npm run check:release` passed with soak skipped by default; `SOAK_TESTS=1 npm run check:release` also passed and executed soak test successfully.
+- Continued bomb-interaction polish: hardened moving-bomb stop behavior so blocked bombs settle on a safe pre-impact cell instead of potentially centering on the occupied target cell in edge cases.
+- Added regression coverage for blocked moving bombs against occupied bomb tiles (`tests/simulation.test.ts`), ensuring blocked motion ends with `movingDirection: none` and no overlap snap into the occupied tile.
+- Validation run: `npm run test` passed (27 tests), `npm run check` passed (lint + tests + build).
+- Implemented flame-powerup interaction rule: powerups on flame tiles are now removed from play, with a one-tick spawn grace for pickups created in the current simulation step (e.g., drops from freshly destroyed soft blocks or elimination scatter).
+- Added regression tests:
+  - existing powerups are removed when a bomb explosion/flame overlaps them.
+  - newly spawned powerups survive their spawn tick even if a flame occupies the same tile, then are removed on the following tick if flame persists.
+- Validation run: `npm run test` passed (29 tests), `npm run check` passed (lint + tests + build).
+- Refined flame/powerup interaction based on feedback: replaced one-tick spawn grace with explicit `spawnShieldTicks` on newly spawned powerups.
+- New drops (from soft-block destruction and elimination scatter) now inherit spawn shield duration equal to `flameTicks`, preventing same-explosion flame windows from deleting the spawn.
+- Powerup flame cleanup now checks active spawn shield instead of transient per-step ID tracking.
+- Updated simulation tests to assert: (1) existing powerups burn under flames, (2) new drops persist while originating flames are still active.
+- Validation run: `npm run test` passed (29 tests), `npm run check` passed (lint + tests + build).
+- Improved bot bomb-plant behavior to reduce orbiting around opponents:
+  - Added `canPlantAtCell` guard so bots only decide to plant when simulation placement rules would actually allow it (empty tile, no bomb, no other player occupying tile).
+  - When a bot decides to plant, it now holds position for that tick (`move` intent forced to none) so the bomb is placed immediately instead of drifting/orbiting.
+- Added bot regression coverage:
+  - planting intent now asserts stationary movement on plant tick.
+  - bot does not attempt to plant while sharing a tile with an opponent.
+- Validation run: `npm run test` passed (30 tests), `npm run check` passed (lint + tests + build).
+- Movement centering pass:
+  - Added lane-centering assist in simulation movement so players are nudged toward tile centers while moving along one axis (and while idle), reducing between-tile drift.
+  - Added placement guard requiring player position near tile center before bomb placement is allowed, preventing "between two tiles" dual-bomb edge cases.
+- Presentation cleanup:
+  - Removed bomb fuse ring circles in battle rendering.
+  - Removed spawn invulnerability circle highlights around players at round start.
+- Added regression tests:
+  - cannot place bombs while between tile centers.
+  - player is nudged toward lane center while moving along a lane.
+- Validation run: `npm run test` passed (32 tests), `npm run check` passed (lint + tests + build).
+- Menu polish pass completed with shared UI chrome helper (`src/ui/menuTheme.ts`) and applied to Title/Lobby/Map Select/Settings/Results for consistent background, panel, header, row, and footer styling.
+- Bomb placement while running refined in simulation (`maybePlaceBomb`): candidate scoring now strongly prefers forward legal tiles and penalizes behind-tile placement during movement.
+- Added/updated regression tests for running/off-center bomb placement behavior in `tests/simulation.test.ts`.
+- Validation run: `npm run check` passed (lint + tests + build).
+- Note: browser automation client referenced by develop-web-game skill was missing in this workspace; verification completed via deterministic tests/build checks.
+- Audio loudness baseline increased by 100%: added global `BASE_AUDIO_BOOST = 2` in `retroAudio` for procedural SFX, external SFX sample playback, and battle music playback volume.
+- Default master volume baseline increased from 30% to 60% for new sessions (`createInitialSession`) and invalid persisted fallback (`persistentSettings.clampVolume`).
+- Validation run: `npm run test && npm run build` passed.
+- Audio loudness escalation pass:
+  - Added `effectiveMasterVolume()` helper (`src/game/audioVolume.ts`) with boosted output curve and applied it to Phaser global sound volume in `main.ts`, `BattleScene`, `MapSelectScene`, and `SettingsScene`.
+  - Increased synth/external SFX gain baseline in `RetroAudio` (`BASE_AUDIO_BOOST = 5`).
+  - `RetroAudio` now uses effective master volume internally and attempts to resume suspended WebAudio context on each `playEvents` call.
+  - Raised default master volume fallback for new sessions/invalid persisted values to `1` in session + persistent settings.
+- Validation run: `npm run check` passed (lint + tests + build).
+- Fixed silent SFX regression by binding synth audio to Phaser's existing WebAudio context when available (`RetroAudio.resolveContext`) and invoking `this.scene.sound.unlock()` in unlock/resume paths.
+- Reduced synth boost from 5 to 3 after context fix to avoid excessive clipping while keeping audibility.
+- Added startup guard against persisted `masterVolume: 0` (session now boots at full volume if stored volume is zero).
+- Settings volume adjustment now clamps to minimum 5% to avoid accidental total-silence trap.
+- Validation run: `npm run test && npm run build` passed.
+- Audio pipeline correction:
+  - Re-enabled external audio asset probing/loading (`EXTERNAL_AUDIO_ENABLED = true` in asset manifest), allowing validated WAV SFX/BGM sources to load instead of forcing synth-only operation.
+  - BattleScene now opts into external SFX when the theme availability probe confirms all required SFX keys are loaded.
+- Validation run: `npm run check` passed (lint + tests + build).
+- Added in-match audio diagnostics panel (BattleScene) with live manager state, context states, mute/volume values, cache key presence, event counters, and self-test status.
+- Added debug hotkeys:
+  - `I` toggles the audio debug panel.
+  - `O` runs an audio self-test (attempts sample playback + synth beeps) and reports result in panel.
+- Added RetroAudio debug APIs:
+  - `getDebugSnapshot()` for runtime telemetry.
+  - `runDebugSelfTest()` for direct playback probe.
+- Validation run: `npm run check` passed (lint + tests + build).
+- Added reusable `MenuSfx` helper (`src/ui/menuSfx.ts`) with move/confirm/back/toggle cues using loaded SFX samples and WebAudio synth fallback.
+- Wired menu SFX into Title/Lobby/Map Select/Settings/Results key interactions.
+- Removed menu key-hint footer bars from all menu scenes (Title, Lobby, Map Select, Settings, Results).
+- Validation run: `npm run check` passed (lint + tests + build).
+- Removed in-game audio debug overlay from BattleScene and its associated key controls.
+- Added AI action debug overlay to BattleScene (toggle with `U`) showing per-bot position, movement intent, bomb intent, escape state, hazard timing, nearest threat, and high-level mode summary per tick.
+- Added bot debug derivation path in `botLogic`:
+  - `deriveBotDebugDecisions()` exported for presentation layer.
+  - internal bot intent computation consolidated via `computeBotIntent()` and reused by `applyBotIntents()`.
+- Retuned bomb place sound to a drier/deeper profile (external + synth fallback) in `retroAudio`.
+- Validation run: `npm run check` passed (lint + tests + build).
+- Implemented sudden-death pre-warning UX in battle top HUD:
+  - last 10 seconds to sudden death now flashes in the top bar (`SD IN mm:ss`) with alternating warning colors.
+  - one warning audio cue is emitted per second during that countdown window.
+  - once started, HUD switches to `SUDDEN DEATH ACTIVE` state.
+- Added explicit match finish reason to simulation state (`matchFinishedReason`) with values `elimination | suddenDeath | timeout`.
+- Battle scene now passes finish reason into results scene payload.
+- Results scene now shows reason-specific outcome labels (`SUDDEN DEATH WIN`, `TIMEOUT WIN`, etc.).
+- Added simulation tests verifying finish reason classification for elimination, sudden death, and timeout outcomes.
+- Validation run: `npm run test` passed (37 tests), `npm run check` passed (lint + tests + build).
+- Improved sudden-death tile placement SFX (`sudden_death_tile`) with a more audible layered cue (tone + low support tone + short noise burst) so block drops are easy to hear.
+- Added battle debug hotkey `T` to jump directly to the sudden-death warning window (10 seconds before configured sudden-death start) for faster tuning/testing.
+- Validation run: `npm run test` and `npm run check` both passed after sudden-death SFX + debug-skip updates.
+- Added multi-round set flow support:
+  - session-level set tracking now supports `Single`, `Best of 3`, and `Best of 5`.
+  - map select now exposes set-length selection (`A/D`), battle top HUD shows live set scores, and results now advance rounds until the set is won before resetting for a new set.
+  - set-progress helpers and regressions were added in `src/game/setProgress.ts` and `tests/setProgress.test.ts`.
+- Split audio settings into separate `SFX` and `Music` channels:
+  - persisted settings now store `sfxVolume`, `musicVolume`, and `musicEnabled`, with backward migration from legacy `masterVolume`.
+  - `MenuSfx` now scales from the live SFX setting, and `RetroAudio` now uses separate SFX and music channel gains.
+- Improved CPU reliability for post-plant decisions:
+  - bot plant-escape checks now use configured `bombFuseTicks` instead of a hardcoded fuse and require a more stable escape window.
+  - added bot regression coverage proving fuse timing changes planting behavior (`tests/botLogic.test.ts`).
+- Validation run: `npm run test` and `npm run check` both passed after set flow, audio split, and CPU reliability updates.
+- Added sudden-death placement polish in battle presentation:
+  - each `sudden_death_tile` event now triggers a brief board flash + per-tile flash highlight + subtle camera shake.
+  - visual timing is synced to sudden-death tile placement events (and corresponding SFX event timing).
+- Added testable debug-skip helper `computeSuddenDeathCountdownSkip()` and wired BattleScene `T` hotkey to it for deterministic sudden-death countdown jumps.
+- Added regression tests for debug skip behavior (`tests/suddenDeathDebug.test.ts`): jump target math, no-op when already past target, and timer clamping.
+- Added sudden-death timing regression test in `tests/simulation.test.ts` to verify first placement tick and configured interval cadence between placements.
+- Improved bot endgame behavior during sudden death (`src/bot/botLogic.ts`):
+  - bots now bias pathing toward safer inner ring layers once sudden death is active.
+  - bots avoid soft-block farming bombs during sudden death unless there is direct close pressure opportunity.
+- Added bot regression coverage for sudden-death center pathing and reduced reckless sudden-death planting (`tests/botLogic.test.ts`).
+- Validation run: `npm run test` and `npm run check` both passed after these updates.

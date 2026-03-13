@@ -1,0 +1,32 @@
+{
+  "name": "snes-bomberman-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run --exclude tests/rematchSoak.test.ts",
+    "test:watch": "vitest",
+    "test:soak": "vitest run tests/rematchSoak.test.ts",
+    "lint": "eslint .",
+    "check": "npm run lint && npm run test && npm run build",
+    "generate:assets": "node scripts/generate-theme-assets.mjs",
+    "validate:assets": "node scripts/validate-final-assets.mjs",
+    "check:release": "npm run check && npm run validate:assets && node scripts/run-soak-if-enabled.mjs"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "eslint": "^9.39.1",
+    "globals": "^17.4.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4",
+    "vitest": "^4.0.0"
+  }
+}
